@@ -1,0 +1,35 @@
+class Solution {
+    public int[] smallestRange(List<List<Integer>> nums) {
+        if(nums == null || nums.isEmpty()) {
+            return null;
+        }
+        PriorityQueue<List<Integer>> pq = new PriorityQueue<List<Integer>>(new Comparator<List<Integer>>() {
+            @Override public int compare(List<Integer> l1, List<Integer> l2){
+                return l1.get(0)-l2.get(0);
+            }
+        });
+        int max = Integer.MIN_VALUE;
+        for (List<Integer> list : nums) {
+            if (list.size()> 0) {
+                 pq.offer(list); 
+            }
+            max = Math.max(max,list.get(0));
+        }
+        int[] result= new int[2];
+        int range = Integer.MAX_VALUE;
+        while (pq.size() == nums.size()) {
+            if( max-pq.peek().get(0) < range){
+                range = max - pq.peek().get(0);
+                result[0]=pq.peek().get(0);
+                result[1] = max;
+            }
+            List<Integer> temp = pq.poll();
+            temp.remove(0);
+            if (!temp.isEmpty()) {
+                pq.offer(temp);
+                 max = Math.max(max,temp.get(0));
+            } 
+        }
+        return result;
+    }
+}
